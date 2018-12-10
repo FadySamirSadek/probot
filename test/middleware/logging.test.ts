@@ -34,7 +34,7 @@ describe('logging', () => {
   })
 
   test('logs requests and responses', () => {
-    return request(server).get('/').expect(200).expect(res => {
+    return request(server).get('/').expect(200).expect((res: TestResponse) => {
       const requestLog = output[0]
       const responseLog = output[2]
 
@@ -71,16 +71,22 @@ describe('logging', () => {
   })
 
   test('uses supplied X-Request-ID', () => {
-    return request(server).get('/').set('X-Request-ID', '42').expect(200).expect(res => {
+    return request(server).get('/').set('X-Request-ID', '42').expect(200).expect((res: TestResponse) => {
       expect(res.header['x-request-id']).toEqual('42')
       expect(output[0].id).toEqual('42')
     })
   })
 
   test('uses X-GitHub-Delivery', () => {
-    return request(server).get('/').set('X-GitHub-Delivery', 'a-b-c').expect(200).expect(res => {
+    return request(server).get('/').set('X-GitHub-Delivery', 'a-b-c').expect(200).expect((res: TestResponse) => {
       expect(res.header['x-request-id']).toEqual('a-b-c')
       expect(output[0].id).toEqual('a-b-c')
     })
   })
 })
+
+interface TestResponse {
+  header: {
+    'x-request-id': string
+  }
+}

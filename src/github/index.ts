@@ -1,7 +1,6 @@
 import Octokit from '@octokit/rest'
 import { addGraphQL } from './graphql'
 import { addLogging, Logger } from './logging'
-import { addPagination } from './pagination'
 import { addRateLimiting } from './rate-limiting'
 
 /**
@@ -16,7 +15,6 @@ export function GitHubAPI (options: Options = {} as any) {
 
   addRateLimiting(octokit, options.limiter)
   addLogging(octokit, options.logger)
-  addPagination(octokit)
   addGraphQL(octokit)
 
   return octokit
@@ -30,11 +28,12 @@ export interface Options extends Octokit.Options {
 
 export interface RequestOptions {
   baseUrl?: string
-  method: string
-  url: string
-  headers: any
+  method?: string
+  url?: string
+  headers?: any
   query?: string
   variables?: Variables
+  data?: any
 }
 
 export interface Result {
@@ -49,15 +48,8 @@ export interface OctokitError extends Error {
 }
 
 export interface GitHubAPI extends Octokit {
+  request: (Route: string, RequestOptions: RequestOptions) => Promise<Octokit.AnyResponse>
   paginate: (res: Promise<Octokit.AnyResponse>, callback: (response: Promise<Octokit.AnyResponse>, done?: () => void) => void) => Promise<any[]>
-  // The following are added because Octokit does not expose the hook.error, hook.before, and hook.after methods
-  hook: {
-    error: (when: 'request', callback: (error: OctokitError, options: RequestOptions) => void) => void
-    before: (when: 'request', callback: (result: Result, options: RequestOptions) => void) => void
-    after: (when: 'request', callback: (result: Result, options: RequestOptions) => void) => void
-  }
-
-  request: (RequestOptions: RequestOptions) => Promise<Octokit.AnyResponse>
   query: (query: string, variables?: Variables, headers?: Headers) => Promise<any>
 }
 
