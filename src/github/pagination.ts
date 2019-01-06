@@ -46,4 +46,4 @@ async function paginate (octokit: Github, ...args: any[]) {
     collection = collection.concat(await callback(response, done))
   }
   return collection
-};
+}
