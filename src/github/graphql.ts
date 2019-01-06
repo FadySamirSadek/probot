@@ -33,18 +33,13 @@ export function addGraphQL (client: GitHubAPI) {
   client.query = graphql.bind(null, client)
 }
 
-<<<<<<< HEAD
-async function graphql (client: GitHubAPI, query: string, variables: Variables, headers: Headers = {}) {
-  const res = await client.request('POST /graphql', { data: { query, variables } })
-=======
 async function graphql (client: GitHubAPI, query: string, variables?: Variables, headers: Headers = {}) {
   const res = await client.request('POST /graphql', {
+    data: { query, variables },
+    headers,
     method: 'POST',
     url: process.env.GHE_HOST ? `https://${process.env.GHE_HOST}/api/graphql` : '/graphql',
-    data: { query, variables },
-    headers
   })
->>>>>>> 3ffd6ddd9e9f62a6a31ab6a3477b6a51cbc13529
 
   if (res.data.errors && res.data.errors.length > 0) {
     throw new GraphQLQueryError(
