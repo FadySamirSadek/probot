@@ -30,8 +30,9 @@ describe('github/graphql', () => {
       data = { viewer: { login: 'bkeepers' } }
 
       nock('https://api.github.com', {
-        reqheaders: { 'content-type': 'application/json' }
-      }).post('/graphql', { query })
+        reqheaders: { 'content-type': 'application/json; charset=utf-8' }
+      })
+        .post('/graphql', { query })
         .reply(200, { data })
 
       expect(await github.query(query)).toEqual(data)
@@ -41,7 +42,7 @@ describe('github/graphql', () => {
       const variables = { owner: 'probot', repo: 'test' }
 
       nock('https://api.github.com', {
-        reqheaders: { 'content-type': 'application/json' }
+        reqheaders: { 'content-type': 'application/json; charset=utf-8' }
       }).post('/graphql', { query, variables })
         .reply(200, { data })
 
@@ -61,7 +62,7 @@ describe('github/graphql', () => {
 
     test('allows custom headers', async () => {
       nock('https://api.github.com', {
-        reqheaders: { 'foo': 'bar' }
+        reqheaders: { foo: 'bar' }
       }).post('/graphql', { query })
         .reply(200, { data })
 
@@ -106,7 +107,7 @@ describe('github/graphql', () => {
       data = { viewer: { login: 'bkeepers' } }
 
       nock('https://notreallygithub.com', {
-        reqheaders: { 'content-type': 'application/json' }
+        reqheaders: { 'content-type': 'application/json; charset=utf-8' }
       }).post('/api/graphql', { query })
         .reply(200, { data })
 
