@@ -1,7 +1,10 @@
 import Github from '@octokit/rest'
 
+const octokitGetNextPage = require('octokit-pagination-methods/lib/get-next-page')
+const octokitHasNextPage = require('octokit-pagination-methods/lib/has-next-page')
+
 export function addPagination (octokit: Github) {
-  octokit.paginate = (...args: any) => paginate(octokit, args[0], args[1], args[2])
+  octokit.paginate = (...args: any[]) => paginate(octokit, args[0], args[1], args[2])
 }
 
 const defaultCallback = (response: Github.AnyResponse, done?: () => void) => response
@@ -41,8 +44,8 @@ async function paginate (octokit: Github, ...args: any[]) {
   collection = collection.concat(await callback(response, done))
 
   // eslint-disable-next-line no-unmodified-loop-condition
-  while (getNextPage && octokit.hasNextPage(response)) {
-    response = await octokit.getNextPage(response)
+  while (getNextPage && octokitHasNextPage(response)) {
+    response = await octokitGetNextPage(octokit, response)
     collection = collection.concat(await callback(response, done))
   }
   return collection

@@ -40,7 +40,7 @@ export = async (app: Application): Promise<void> => {
     const github = await app.auth()
 
     const req = github.apps.listInstallations({ per_page: 100 })
-    return github.paginate(req, async (response: Promise<AnyResponse>) => {
+    return github.paginate(req, async (response: AnyResponse) => {
       const res = await response
       return res.data
     })
@@ -59,7 +59,7 @@ export = async (app: Application): Promise<void> => {
       const github = await app.auth(installation.id)
 
       const req = github.apps.listRepos({ per_page: 100 })
-      const repositories: Repository[] = await github.paginate(req, async (response: Promise<AnyResponse>) => {
+      const repositories: Repository[] = await github.paginate(req, async (response: AnyResponse) => {
         const res = await response
         return res.data.repositories.filter((repository: Repository) => !repository.private)
       })
