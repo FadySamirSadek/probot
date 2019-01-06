@@ -1,6 +1,7 @@
 import Octokit from '@octokit/rest'
 import { addGraphQL } from './graphql'
 import { addLogging, Logger } from './logging'
+import { addPagination } from './pagination'
 import { addRateLimiting } from './rate-limiting'
 
 /**
@@ -13,6 +14,7 @@ import { addRateLimiting } from './rate-limiting'
 export function GitHubAPI (options: Options = {} as any) {
   const octokit = new Octokit(options) as GitHubAPI
 
+  addPagination(octokit)
   addRateLimiting(octokit, options.limiter)
   addLogging(octokit, options.logger)
   addGraphQL(octokit)
@@ -48,8 +50,11 @@ export interface OctokitError extends Error {
 }
 
 export interface GitHubAPI extends Octokit {
-  request: (Route: string, RequestOptions: RequestOptions) => Promise<Octokit.AnyResponse>
-  paginate: (res: Promise<Octokit.AnyResponse>, callback: (response: Promise<Octokit.AnyResponse>, done?: () => void) => void) => Promise<any[]>
+  paginate: {
+    (res: Promise<Octokit.AnyResponse>, callback: (response: Octokit.AnyResponse, done?: () => void) => any): Promise<any[]>;
+    (Route: string, EndpointOptions?: Octokit.EndpointOptions, callback?: (response: Octokit.AnyResponse) => any): Promise<any[]>;
+    (EndpointOptions: Octokit.EndpointOptions, callback?: (response: Octokit.AnyResponse) => any): Promise<any[]>;
+  }
   query: (query: string, variables?: Variables, headers?: Headers) => Promise<GraphQlQueryResponse>
 }
 
