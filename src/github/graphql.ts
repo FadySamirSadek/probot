@@ -35,7 +35,8 @@ export function addGraphQL (client: GitHubAPI) {
 
 async function graphql (client: GitHubAPI, query: string, variables?: Variables, headers: Headers = {}) {
   const res = await client.request('POST /graphql', {
-    baseUrl: process.env.GHE_HOST && `https://${process.env.GHE_HOST}/api`,
+    method: 'POST',
+    url: process.env.GHE_HOST ? `https://${process.env.GHE_HOST}/api/graphql` : '/graphql',
     data: { query, variables },
     headers
   })
