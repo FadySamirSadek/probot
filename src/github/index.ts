@@ -48,9 +48,21 @@ export interface OctokitError extends Error {
 }
 
 export interface GitHubAPI extends Octokit {
-  request: (Route: string, RequestOptions: RequestOptions) => Promise<Octokit.AnyResponse>
   paginate: (res: Promise<Octokit.AnyResponse>, callback: (response: Promise<Octokit.AnyResponse>, done?: () => void) => void) => Promise<any[]>
-  query: (query: string, variables?: Variables, headers?: Headers) => Promise<any>
+  query: (query: string, variables?: Variables, headers?: Headers) => Promise<GraphQlQueryResponse>
+}
+
+export interface GraphQlQueryResponse {
+  data: { [ key: string ]: any } | null
+  errors?: [{
+    message: string
+    path: [string]
+    extensions: { [ key: string ]: any }
+    locations: [{
+      line: number,
+      column: number
+    }]
+  }]
 }
 
 export interface Headers {
