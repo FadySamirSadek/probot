@@ -38,7 +38,7 @@ async function graphql (client: GitHubAPI, query: string, variables?: Variables,
     data: { query, variables },
     headers,
     method: 'POST',
-    url: process.env.GHE_HOST ? `https://${process.env.GHE_HOST}/api/graphql` : '/graphql',
+    url: process.env.GHE_HOST ? `https://${process.env.GHE_HOST}/api/graphql` : '/graphql'
   })
 
   if (res.data.errors && res.data.errors.length > 0) {
