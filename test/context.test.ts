@@ -103,6 +103,7 @@ describe('Context', () => {
     })
 
     it('gets a valid configuration', async () => {
+      jest.spyOn(github.repos, 'getContents').mockReturnValue(Promise.resolve(readConfig('basic.yml')))
       const config = await context.config('test-file.yml')
 
       expect(github.repos.getContents).toHaveBeenCalledWith({
