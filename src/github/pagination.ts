@@ -1,6 +1,8 @@
 import Github from '@octokit/rest'
 
+// tslint:disable-next-line
 const octokitGetNextPage = require('octokit-pagination-methods/lib/get-next-page')
+// tslint:disable-next-line
 const octokitHasNextPage = require('octokit-pagination-methods/lib/has-next-page')
 
 export function addPagination (octokit: Github) {
